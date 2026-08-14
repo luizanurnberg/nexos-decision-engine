@@ -27,3 +27,31 @@ def test_planner_should_not_exceed_sprint_capacity() -> None:
     result = planner.plan(tasks, sprint)
 
     assert result.planned_hours <= result.capacity_hours
+
+def test_planner_should_prioritize_higher_scoring_tasks() -> None:
+    high_priority_task = Task(
+        id=1,
+        title="High Priority",
+        priority=5,
+        business_value=10.0,
+        estimated_hours=4.0,
+    )
+
+    low_priority_task = Task(
+        id=2,
+        title="Low Priority",
+        priority=1,
+        business_value=2.0,
+        estimated_hours=4.0,
+    )
+
+    sprint = SprintConfiguration(working_days=1)
+
+    planner = GreedyPlanner()
+
+    result = planner.plan(
+        [low_priority_task, high_priority_task],
+        sprint,
+    )
+
+    assert result.selected_tasks[0].id == high_priority_task.id
