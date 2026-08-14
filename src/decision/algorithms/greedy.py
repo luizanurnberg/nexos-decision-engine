@@ -2,9 +2,7 @@ from decision.domain.planning import SprintPlan
 from decision.domain.sprint import SprintConfiguration
 from decision.domain.task import Task, TaskStatus
 
-
 class GreedyPlanner:
-    """Greedy strategy for selecting tasks for a sprint."""
 
     def __init__(
         self,
@@ -30,7 +28,6 @@ class GreedyPlanner:
         tasks: list[Task],
         sprint: SprintConfiguration,
     ) -> SprintPlan:
-        """Create a sprint plan using a greedy selection strategy."""
 
         selected_tasks: list[Task] = []
         selected_task_ids: set[int] = set()
@@ -75,7 +72,6 @@ class GreedyPlanner:
         )
 
     def _calculate_score(self, task: Task) -> float:
-        """Calculate the priority score of a task."""
 
         if task.estimated_hours <= 0:
             return 0.0
@@ -93,7 +89,6 @@ class GreedyPlanner:
         task_map: dict[int, Task],
         selected_task_ids: set[int],
     ) -> list[Task]:
-        """Return tasks that are currently eligible for selection."""
 
         return [
             task
@@ -111,7 +106,6 @@ class GreedyPlanner:
         task_map: dict[int, Task],
         selected_task_ids: set[int],
     ) -> bool:
-        """Determine whether a task can be selected."""
 
         if task.status in {
             TaskStatus.DONE,
@@ -131,7 +125,6 @@ class GreedyPlanner:
         task_map: dict[int, Task],
         selected_task_ids: set[int],
     ) -> bool:
-        """Check whether all task dependencies are satisfied."""
 
         for dependency_id in task.dependencies:
             dependency = task_map.get(dependency_id)
@@ -154,7 +147,6 @@ class GreedyPlanner:
         tasks: list[Task],
         remaining_hours: float,
     ) -> Task | None:
-        """Return the highest-scoring task that fits the remaining capacity."""
 
         for task in tasks:
             if task.estimated_hours <= remaining_hours:
