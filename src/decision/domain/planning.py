@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+
 from decision.domain.task import Task
+
 
 @dataclass(frozen=True)
 class SprintPlan:

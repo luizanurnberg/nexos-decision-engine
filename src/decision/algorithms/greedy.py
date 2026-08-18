@@ -2,6 +2,7 @@ from decision.domain.planning import SprintPlan
 from decision.domain.sprint import SprintConfiguration
 from decision.domain.task import Task, TaskStatus
 
+
 class GreedyPlanner:
 
     def __init__(
@@ -72,10 +73,6 @@ class GreedyPlanner:
         )
 
     def _calculate_score(self, task: Task) -> float:
-
-        if task.estimated_hours <= 0:
-            return 0.0
-
         weighted_value = (
             task.priority * self._priority_weight
             + task.business_value * self._business_value_weight

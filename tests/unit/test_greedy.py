@@ -1,7 +1,7 @@
-from decision.domain.task import TaskStatus
 from decision.algorithms.greedy import GreedyPlanner
 from decision.domain.sprint import SprintConfiguration
-from decision.domain.task import Task
+from decision.domain.task import Task, TaskStatus
+
 
 def test_planner_should_not_exceed_sprint_capacity() -> None:
     tasks = [
@@ -133,3 +133,60 @@ def test_planner_should_not_select_completed_tasks() -> None:
     )
 
     assert result.selected_tasks == []
+
+def test_planner_should_skip_tasks_that_do_not_fit() -> None:
+    large_task = Task(
+        id=1,
+        title="Large task",
+        priority=5,
+        business_value=10.0,
+        estimated_hours=10.0,
+    )
+
+    small_task = Task(
+        id=2,
+        title="Small task",
+        priority=3,
+        business_value=5.0,
+        estimated_hours=4.0,
+    )
+
+    sprint = SprintConfiguration(working_days=1)
+
+    planner = GreedyPlanner()
+
+    result = planner.plan(
+        [large_task, small_task],
+        sprint,
+    )
+
+    assert [task.id for task in result.selected_tasks] == [2]
+    assert result.planned_hours == 4.0
+
+def test_planner_should_prioritize_value_per_hour() -> None:
+    high_value_task = Task(
+        id=1,
+        title="High value",
+        priority=5,
+        business_value=10.0,
+        estimated_hours=2.0,
+    )
+
+    low_value_task = Task(
+        id=2,
+        title="Low value",
+        priority=5,
+        business_value=10.0,
+        estimated_hours=10.0,
+    )
+
+    sprint = SprintConfiguration(working_days=1)
+
+    planner = GreedyPlanner()
+
+    result = planner.plan(
+        [low_value_task, high_value_task],
+        sprint,
+    )
+
+    assert result.selected_tasks[0].id == high_value_task.id

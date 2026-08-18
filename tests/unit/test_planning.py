@@ -1,5 +1,6 @@
 from decision.domain.planning import SprintPlan
 
+
 def test_remaining_hours_should_be_calculated() -> None:
     plan = SprintPlan(
         selected_tasks=[],
